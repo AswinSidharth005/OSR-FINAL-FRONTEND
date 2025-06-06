@@ -1,0 +1,149 @@
+<div class="background py-5">
+  <div class="container">
+    <h1 class="display-5 fw-bold text-center mb-4 text-primary">Claim Management</h1>
+
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-6">
+        <div class="input-group shadow-sm">
+          <input type="text" class="form-control form-control-lg border-0" placeholder="Search by Claim ID" [(ngModel)]="searchClaimId" (input)="searchByClaimId()">
+          <span class="input-group-text bg-white border-0">
+            <i class="fas fa-search text-muted"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-3">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-primary">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Customer ID</th>
+                <th scope="col">Customer Email</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-center">Review Amount</th>
+                <th scope="col" class="text-center">Review Validity</th>
+                <th scope="col" class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let claim of paginatedClaims()">
+                <td>{{claim.claimId}}</td>
+                <td>{{claim.customerId}}</td>
+                <td>{{claim.customerMail}}</td>
+                <td>{{claim.claimAmount | currency:'USD':'symbol'}}</td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                      'bg-success': claim.claimStatus === 'Approved',
+                      'bg-warning text-dark': claim.claimStatus === 'Pending',
+                      'bg-danger': claim.claimStatus === 'Rejected'
+                    }">
+                    {{claim.claimStatus}}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-success" (click)="reviewByAmt(claim.claimId)">
+                    <i class="fas fa-money-check-alt me-1"></i> Review
+                  </button>
+                </td>
+                
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-info" (click)="reviewByPeriod(claim.claimId)">
+                    <i class="fas fa-calendar-alt me-1"></i> Review
+                  </button>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#updateClaim" (click)="edit(claim)" title="Edit Claim">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteClaim(claim.claimId)" title="Delete Claim">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="paginatedClaims().length === 0">
+                <td colspan="9" class="text-center text-muted py-4">No claims found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <nav aria-label="Claim Pagination" class="mt-4">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="prevPage()" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span> Previous
+          </button>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link text-primary">{{currentPage}} / {{totalPages()}}</span>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages()">
+          <button class="page-link" (click)="nextPage()" aria-label="Next">
+            Next <span aria-hidden="true">&raquo;</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div *ngIf="selectedClaim" class="modal fade" id="updateClaim" tabindex="-1" aria-labelledby="updateClaimLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg rounded-3">
+      <form (ngSubmit)="update(claimForm.value)" #claimForm="ngForm">
+        <div class="modal-header bg-primary text-white p-4">
+          <h5 class="modal-title" id="updateClaimLabel">Update Claim Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="claimId" class="form-label fw-bold">Claim ID</label>
+              <input type="number" class="form-control" id="claimId" [(ngModel)]="selectedClaim.claimId" name="claimId" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="customerId" class="form-label fw-bold">Customer ID</label>
+              <input type="number" class="form-control" id="customerId" [(ngModel)]="selectedClaim.customerId" name="customerId" readonly>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="customerMail" class="form-label fw-bold">Customer Email</label>
+              <input type="email" class="form-control" id="customerMail" [(ngModel)]="selectedClaim.customerMail" name="customerMail" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="policyId" class="form-label fw-bold">Policy ID</label>
+              <input type="text" class="form-control" id="policyId" [(ngModel)]="selectedClaim.policyId" name="policyId" readonly>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="agentId" class="form-label fw-bold">Agent ID</label>
+              <input type="number" class="form-control" id="agentId" [(ngModel)]="selectedClaim.agentId" name="agentId" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="claimAmount" class="form-label fw-bold">Claim Amount</label>
+              <input type="number" class="form-control" id="claimAmount" [(ngModel)]="selectedClaim.claimAmount" name="claimAmount" required min="0">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="claimStatus" class="form-label fw-bold">Status</label>
+            <input type="text" class="form-control" id="claimStatus" [(ngModel)]="selectedClaim.claimStatus" name="claimStatus" readonly>
+          </div>
+        </div>
+        <div class="modal-footer p-3 bg-light border-top">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Update Claim
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

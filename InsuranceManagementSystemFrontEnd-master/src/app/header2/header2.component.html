@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-lg secondary-navbar fixed-top">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="secondaryNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-link text-dark" routerLink="/home" href="#">HOME</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* Transition effect for nav links */
+    .secondary-navbar .nav-link {
+        transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    /* Hover effect for nav links */
+    .secondary-navbar .nav-link:hover {
+        color: #007bff !important; /* Change text color on hover (e.g., Bootstrap primary blue) */
+        transform: translateY(-3px); /* Slightly move link up on hover */
+    }
+
+    /* Animation for the entire navbar to fade in */
+    @keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .secondary-navbar {
+        animation: fadeInDown 0.8s ease-out forwards; /* Apply the animation */
+    }
+
+    /* Optional: Slight delay for nav items to appear one by one */
+    .secondary-navbar .nav-item {
+        opacity: 0; /* Start hidden */
+        animation: fadeIn 0.5s ease-out forwards; /* Apply fade in */
+        animation-delay: var(--delay); /* Use CSS variable for delay */
+    }
+
+    /* Assign delays to individual nav items */
+    .secondary-navbar .nav-item:nth-child(1) {
+        --delay: 0.2s;
+    }
+
+    .secondary-navbar .nav-item:nth-child(2) {
+        --delay: 0.3s;
+    }
+
+    /* Keyframes for simple fade in */
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+</style>

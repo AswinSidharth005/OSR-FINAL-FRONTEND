@@ -1,0 +1,195 @@
+<div class="background">
+  <div class="container flex-column d-flex justify-content-center align-items-center">
+    <h1 class="pt-5 mt-3 display-6 fw-bold text-center position-relative" style="top:20px;">
+      AGENT INFO
+    </h1>
+    <div class="d-flex align-items-center mt-4">
+
+      <search class="w-50 ms-2 d-flex">
+
+        <input type="text" class="form-control rounded-pill custom-shadow" style="background-color: rgb(237, 250, 252); color: black;" placeholder="Search by name" [(ngModel)]="searchTerm"
+          (input)="filterAgents()" />
+        <i class="fa-solid fa-magnifying-glass mt-2 mx-2 text-dark fa-1x"></i>
+
+      </search>
+      <button type="button" class="btn btn-primary ms-auto rounded-pill custom-shadow" data-bs-toggle="modal" data-bs-target="#add">
+        Add More Agents
+      </button>
+    </div>
+  </div>
+
+  <div class="container d-flex flex-column justify-content-center align-items-center">
+    <table class="pt-4 mt-4 table table-info table-hover rounded custom-table-shadow" style="width:1000px;">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>EMAIL</th>
+          <th>POLICIES</th>
+          <th class="text-center">ACTION</th>
+          <th class="text-center">ASSIGN POLICY</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let agent of paginatedAgents(); trackBy: trackByAgentId">
+          <td class="text-dark">{{agent.name}}</td>
+          <td class="text-dark">{{agent.email}}</td>
+          <td class="text-dark">
+            <button class="btn btn-info rounded-pill custom-shadow" data-bs-toggle="modal" data-bs-target="#policy"
+              (click)="loadPolicies(agent)">Policy</button>
+          </td>
+          <td class="text-dark">
+            <button class="btn btn-warning rounded-pill custom-shadow" data-bs-toggle="modal" data-bs-target="#update"
+              (click)="edit(agent)">
+              <i class="fa-solid fa-file-pen"></i> Edit
+            </button>
+            <button class="btn btn-danger ms-2 rounded-pill custom-shadow" (click)="delete(agent)">
+              <i class="fa-solid fa-user-xmark"></i> Delete
+            </button>
+          </td>
+          <td class="text-dark text-center">
+            <button class="btn btn-success rounded-pill custom-shadow" data-bs-toggle="modal" data-bs-target="#assign"
+              (click)="edit(agent)">ASSIGN</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link rounded-pill custom-shadow" (click)="prevPage()">Previous</button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link rounded-pill custom-shadow" (click)="nextPage()">Next</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</div>
+
+
+<div class="modal fade" id="policy" tabindex="-1" aria-labelledby="policyLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 modal-custom-animation">
+
+      <div class="modal-header bg-primary text-white rounded-top-4">
+        <h5 class="modal-title" id="policyLabel">Assigned Policies</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-info table-hover rounded custom-table-shadow">
+          <thead>
+            <th class="text-center">Policy Id</th>
+            <th class="text-center">Policy Name</th>
+          </thead>
+          <tbody>
+            @for(policy of policies;track policy.policyId){
+            <tr>
+              <td class="text-dark text-center">{{policy.policyId}}</td>
+              <td class="text-dark text-center">{{policy.assignedPolicies}}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="add" tabindex="-1" aria-labelledby="addLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 modal-custom-animation">
+      <form (ngSubmit)="add(agentForm)" #agentForm="ngForm">
+        <div class="modal-header bg-success text-white rounded-top-4">
+          <h5 class="modal-title" id="addLabel">Add New Agent</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Agent Name</label>
+            <input type="text" class="form-control rounded-pill" ngModel name="name" required minlength="3">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Agent Email:</label>
+            <input type="text" class="form-control rounded-pill" ngModel name="email" required min="1">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success rounded-pill custom-shadow" data-bs-dismiss="modal">
+            Add
+          </button>
+          <button type="button" class="btn btn-secondary rounded-pill custom-shadow" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="selectedAgent" class="modal fade" id="update" tabindex="-1" aria-labelledby="updateLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 modal-custom-animation">
+      <form (ngSubmit)="update(agentForm.value)" #agentForm="ngForm">
+        <div class="modal-header bg-warning text-white rounded-top-4">
+          <h5 class="modal-title" id="updateLabel">Update Agent Info</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Agent Name</label>
+            <input type="text" class="form-control rounded-pill" [(ngModel)]="selectedAgent.name" name="name" required
+              minlength="3">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Agent Email:</label>
+            <input type="text" class="form-control rounded-pill" [(ngModel)]="selectedAgent.email" name="email" required min="1">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success rounded-pill custom-shadow" data-bs-dismiss="modal">
+            Update
+          </button>
+          <button type="button" class="btn btn-secondary rounded-pill custom-shadow" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="selectedAgent" class="modal fade" id="assign" tabindex="-1" aria-labelledby="assignLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 modal-custom-animation">
+
+      <div class="modal-header bg-info text-white rounded-top-4">
+        <h5 class="modal-title" id="assignLabel">Assign Policy to Agent</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <table class="table table-info table-hover rounded custom-table-shadow">
+            <thead>
+              <th class="text-center">Policy Id</th>
+              <th class="text-center">Policy Name</th>
+              <th class="text-center">Assign</th>
+            </thead>
+            <tbody>
+              @for(policy of policies1;track policy.policyId){
+              <tr>
+                <td class="text-dark text-center">{{policy.policyId}}</td>
+                <td class="text-dark text-center">{{policy.policyName}}</td>
+                <td class="text-dark text-center">
+                  <button class="btn btn-success rounded-pill custom-shadow" (click)="editPol(policy)" data-bs-dismiss="modal">Assign</button>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

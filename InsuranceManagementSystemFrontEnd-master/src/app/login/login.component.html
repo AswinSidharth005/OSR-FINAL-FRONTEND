@@ -1,0 +1,269 @@
+<div class="video-background">
+    <video autoplay loop muted playsinline class="video-element">
+        <source src="home.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="content-over-video login-page-content">
+        <div class="container mt-3 d-flex justify-content-center align-items-center vh-100">
+            <div class="card login-card">
+                <div class="card-body">
+
+                    <div class="card-title d-flex justify-content-center align-items-center text-dark">
+                        <i class="fas fa-sign-in-alt fa-2x mx-2 icon-animated"></i> <h4> LOGIN</h4>
+                    </div>
+                    <p class="card-text d-flex justify-content-center mt-4 text-secondary">Please enter your credentials to proceed.</p>
+                    <form #frm="ngForm" (ngSubmit)="validated(frm)">
+                        <div class="mb-3 mt-3">
+                            <div class="mb-3">
+                                <label for="username" class="form-label visually-hidden">Username:</label>
+                                <div class="input-group input-group-animated">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span> <input type="text" ngModel name="username" class="form-control"
+                                        placeholder="Enter your username"> </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label visually-hidden">Password:</label>
+                                <div class="input-group input-group-animated">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span> <input type="password" ngModel class="form-control" name="password"
+                                        placeholder="Enter your password"> </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column justify-content-center align-items-center">
+                            <input type="submit" class="btn btn-primary submit-btn-animated" value="Submit">
+                            <a routerLink="/register" class="card-link mt-3 register-link-animated">Register Here</a> </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<router-outlet />
+
+<style>
+    /* Base styles for HTML and Body - unchanged from previous responses */
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif; /* Ensuring Poppins is applied generally */
+    }
+
+    /* Video Background Styles - unchanged from previous responses */
+    .video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+        background-color: #333;
+    }
+
+    .video-element {
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+    }
+
+    /* Content Over Video - now includes login-page-content */
+    .content-over-video.login-page-content {
+        position: absolute; /* Changed to absolute to correctly position content over video */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1; /* Ensures it's above the video */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* --- Login Card Theming & Enhancements --- */
+
+    .login-card {
+        background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white for a clean look */
+        border-radius: 15px; /* Softer rounded corners */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+        width: 50%; /* Adjusted for better responsiveness */
+        max-width: 500px; /* Max width for larger screens */
+        padding: 30px;
+        animation: fadeInScale 0.6s ease-out forwards; /* Animation for card appearance */
+        border: none; /* Remove default Bootstrap border */
+    }
+
+    /* Animation for card appearance */
+    @keyframes fadeInScale {
+        0% {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .card-title h4 {
+        color: #00796B; /* A darker teal/green for headings */
+        font-weight: 600;
+        margin-bottom: 0; /* Remove default margin */
+    }
+
+    .card-title i {
+        color: #00796B; /* Icon color matches heading */
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .icon-animated {
+        animation: bounceIn 0.8s ease-out forwards; /* Animation for the main icon */
+    }
+
+    @keyframes bounceIn {
+        0%, 20%, 40%, 60%, 80%, 100% {
+            transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        0% {
+            opacity: 0;
+            transform: scale3d(0.3, 0.3, 0.3);
+        }
+        20% {
+            transform: scale3d(1.1, 1.1, 1.1);
+        }
+        40% {
+            transform: scale3d(0.9, 0.9, 0.9);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(1.03, 1.03, 1.03);
+        }
+        80% {
+            transform: scale3d(0.97, 0.97, 0.97);
+        }
+        100% {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+
+    .card-text {
+        color: #607D8B; /* A subtle grey for descriptive text */
+        font-size: 0.95em;
+        margin-bottom: 25px !important; /* Increase space below it */
+    }
+
+    /* Input Group Styling */
+    .input-group-animated .input-group-text {
+        background-color: #E0F7FA; /* Lighter background for input icon */
+        border: 1px solid #B2EBF2; /* Lighter border */
+        color: #00BCD4; /* Icon color */
+        border-radius: 0.25rem 0 0 0.25rem; /* Match input border radius */
+        transition: all 0.3s ease-in-out;
+    }
+
+    .input-group-animated .form-control {
+        border: 1px solid #B2EBF2;
+        border-left: none; /* No double border with input-group-text */
+        box-shadow: none; /* Remove default focus shadow */
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .input-group-animated .form-control:focus {
+        border-color: #00BCD4; /* Highlight border on focus */
+        box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25); /* Custom focus shadow */
+    }
+
+    /* Submit Button */
+    .submit-btn-animated {
+        background-color: #00BCD4; /* Primary action color */
+        border-color: #00BCD4;
+        color: white;
+        width: 100%; /* Make it full width of its container */
+        max-width: 300px; /* Max width for larger screens */
+        padding: 10px 20px;
+        border-radius: 25px; /* Rounded pill shape */
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3); /* Soft shadow */
+        animation: slideInUp 0.5s ease-out forwards; /* Animation for button */
+        animation-delay: 0.2s; /* Delay its appearance slightly */
+        opacity: 0; /* Start hidden */
+    }
+
+    .submit-btn-animated:hover {
+        background-color: #0097A7; /* Darker on hover */
+        border-color: #0097A7;
+        transform: translateY(-3px); /* Lift effect */
+        box-shadow: 0 6px 15px rgba(0, 188, 212, 0.4); /* Enhanced shadow */
+    }
+
+    /* Register Link */
+    .register-link-animated {
+        color: #00796B !important; /* Matches heading color */
+        font-weight: 500;
+        text-decoration: none; /* Remove underline by default */
+        transition: all 0.3s ease-in-out;
+        animation: fadeIn 0.5s ease-out forwards; /* Animation for link */
+        animation-delay: 0.4s; /* Delay its appearance */
+        opacity: 0; /* Start hidden */
+    }
+
+    .register-link-animated:hover {
+        text-decoration: underline; /* Underline on hover */
+        color: #004D40 !important; /* Darker on hover */
+        transform: translateY(-1px); /* Slight lift */
+    }
+
+    /* Animations for elements that appear later */
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes slideInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+        .login-card {
+            width: 90%;
+            padding: 20px;
+        }
+
+        .submit-btn-animated {
+            width: 100%; /* Full width on smaller screens */
+            max-width: unset;
+        }
+    }
+
+    @media (max-height: 600px) {
+        .login-card {
+            padding: 15px;
+            height: auto; /* Allow height to adjust */
+        }
+        .card-text {
+            margin-bottom: 15px !important;
+        }
+    }
+</style>

@@ -1,0 +1,175 @@
+/* General Body and Background (Keeping your existing styles) */
+body {
+    background-color: #1a1a2e; /* Dark blue-purple */
+    color: #e0e0e0; /* Light gray for text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+/* Background image for .background class */
+.background {
+    background-image: url('/custHomeBg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 120vh; /* Adjust as needed */
+}
+
+/* Container Styling (Keeping your existing styles) */
+.container {
+    padding: 3rem 1rem;
+}
+
+/* Heading and Lead Paragraph (Keeping your existing styles) */
+h1 {
+    color: #00bcd4; /* Cyan */
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(0, 188, 212, 0.5); /* Subtle glow */
+}
+
+.lead {
+    color: #b0b0b0; /* Slightly darker gray */
+    margin-bottom: 3rem;
+    font-size: 1.25rem;
+}
+
+/* --- Card Styling with Flip Effect --- */
+
+/* Parent for 3D context */
+.col-md-3 {
+    /* Ensures the 3D transform works correctly within the grid item */
+    perspective: 1000px;
+}
+
+.card {
+    background-color: transparent; /* Make card background transparent to allow flip */
+    border: none; /* Remove default border if needed, or style it on the inner-card */
+    border-radius: 12px;
+    overflow: visible; /* Allow content to go beyond bounds during flip */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    height: 100%;
+    display: flex; /* Flex is still good for layout */
+
+    /* Basic 3D transform properties for the flip */
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease-in-out; /* Smooth flip animation */
+}
+
+/* When the card is hovered, flip it */
+.card:hover {
+    transform: rotateY(180deg); /* Flip horizontally */
+    /* No need for translateY here as the flip handles visual movement */
+}
+
+/* Inner container for front and back sides */
+.card-inner {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    position: relative;
+    border-radius: 12px; /* Apply border radius here */
+    overflow: hidden; /* Keep content within bounds */
+}
+
+/* Front of the card */
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Hide the back of the element when facing away */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    box-sizing: border-box; /* Include padding/border in element's total width and height */
+}
+
+.card-front {
+    background-color: #2a2a4a; /* Darker blue-purple for cards */
+    border: 1px solid rgba(0, 188, 212, 0.3); /* Cyan border */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Shadow for the front */
+}
+
+.card-front .card-body,
+.card-front .card-footer {
+    width: 100%; /* Ensure content fills the front */
+}
+
+.card-body h5 {
+    color: #e0e0e0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 2rem; /* Add padding to text for better spacing */
+}
+
+.card-footer {
+    background-color: #00796b; /* Dark teal for footer */
+    color: #ffffff;
+    font-weight: 700;
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Back of the card - This will contain the 'View Policies', 'Customer Operations', etc. */
+.card-back {
+    background-color: #00bcd4; /* Cyan for the back side */
+    color: #1a1a2e; /* Dark text on cyan background */
+    transform: rotateY(180deg); /* Initially rotated to be hidden */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(0, 188, 212, 0.5); /* Slightly darker cyan border */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Shadow for the back */
+}
+
+/* Specific Card Colors - Apply to card-front for consistency */
+.policy-card .card-front {
+    background: linear-gradient(135deg, #2a2a4a 0%, #3a3a6a 100%);
+}
+.customer-card .card-front {
+    background: linear-gradient(135deg, #2a2a4a 0%, #4a3a6a 100%);
+}
+.claim-card .card-front {
+    background: linear-gradient(135deg, #2a2a4a 0%, #3a4a6a 100%);
+}
+.agent-card .card-front {
+    background: linear-gradient(135deg, #2a2a4a 0%, #6a3a4a 100%);
+}
+
+/* Overriding previous .hover-text and .fancy-hover as they are now handled by the flip */
+.hover-text {
+    opacity: 1; /* Always visible on the front */
+}
+
+.fancy-hover::before {
+    /* We'll disable this specific fancy-hover effect as the flip handles the visual change */
+    display: none;
+}
+
+.fancy-hover:hover {
+    /* Transform handled by the card flip itself */
+    box-shadow: 0 8px 25px rgba(0, 188, 212, 0.4); /* Keep this shadow */
+}
+
+/* Media Queries for Responsiveness (Keeping existing styles) */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1.5rem;
+    }
+}

@@ -1,0 +1,62 @@
+<div class="background" style="background-color: #2c3e50; min-height: 100vh; color: #ecf0f1;">
+    <div class="container d-flex flex-column justify-content-center align-items-center py-5">
+        <h1 class="display-5 fw-bold text-center mb-3">
+            Welcome to the Agent Portal
+        </h1>
+        <p class="lead text-center mb-5">
+            Select an operation below to get started.
+        </p>
+
+        <div class="container">
+            <div class="row justify-content-center g-4">
+
+                <div class="col-md-3">
+                    <div class="card fancy-hover text-white operation-card policy-card" (click)="openPolicy()">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="hover-text text-center">Manage Insurance Policies</h5>
+                        </div>
+                        <div class="card-footer text-center bg-primary text-white fw-bold">
+                            View Policies
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card fancy-hover text-white operation-card customer-card" (click)="openCust()">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="hover-text text-center">Manage Customer Accounts</h5>
+                        </div>
+                        <div class="card-footer text-center bg-primary text-white fw-bold">
+                            Customer Operations
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card fancy-hover text-white operation-card claim-card" (click)="openClaim()">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="hover-text text-center">View Customer Claims</h5>
+                        </div>
+                        <div class="card-footer text-center bg-primary text-white fw-bold">
+                            View Claims
+                        </div>
+                    </div>
+                </div>
+
+                @if(role === 'admin') {
+                <div class="col-md-3">
+                    <div class="card fancy-hover text-white operation-card agent-card" (click)="openAgent()">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="hover-text text-center">Agent Management</h5>
+                        </div>
+                        <div class="card-footer text-center bg-primary text-white fw-bold">
+                            Agent Operations
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<router-outlet></router-outlet>

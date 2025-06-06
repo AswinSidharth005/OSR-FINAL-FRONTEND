@@ -1,0 +1,615 @@
+<div class="background">
+  <div class="container flex-column d-flex justify-content-center align-items-center">
+      <h1 class="pt-5 mt-3 display-6 fw-bold text-center position-relative customer-heading">
+          CUSTOMER INFO
+      </h1>
+      <div class="d-flex align-items-center mt-4 w-100 search-add-container">
+          <div class="search-bar d-flex align-items-center flex-grow-1 me-3">
+              <input type="text" class="form-control search-input" placeholder="" [(ngModel)]="searchTerm"
+                  (input)="filterCustomers()" />
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          </div>
+          <button type="button" class="btn btn-add-customer" data-bs-toggle="modal" data-bs-target="#add">
+              <i class="fas fa-user-plus me-2"></i> Add More Customers
+          </button>
+      </div>
+  </div>
+
+  <div class="container d-flex flex-column justify-content-center align-items-center customer-table-container">
+      <table class="pt-4 mt-4 table table-hover customer-table">
+          <thead>
+              <tr>
+                  <th>NAME</th>
+                  <th>EMAIL</th>
+                  <th>PHONE</th>
+                  <th>ADDRESS</th>
+                  <th>POLICIES</th>
+                  <th class="text-center">ACTION</th>
+                  <th class="text-center">ASSIGN POLICY</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let customer of paginatedCustomers(); trackBy: trackByCustomerId" class="table-row-animate">
+                  <td class="text-dark">{{customer.name}}</td>
+                  <td class="text-dark">{{customer.email}}</td>
+                  <td class="text-dark">{{customer.customerPhone}}</td>
+                  <td class="text-dark">{{customer.customerAddress}}</td>
+                  <td class="text-dark">
+                      <button class="btn btn-view-policy" data-bs-toggle="modal" data-bs-target="#policy"
+                          (click)="loadPolicies(customer)">View Policies</button>
+                  </td>
+                  <td class="text-dark action-buttons">
+                      <button class="btn btn-action btn-edit me-2" data-bs-toggle="modal" data-bs-target="#update"
+                          (click)="edit(customer)">
+                          <i class="fa-solid fa-file-pen me-1"></i> Edit
+                      </button>
+                      <button class="btn btn-action btn-delete" (click)="delete(customer)">
+                          <i class="fa-solid fa-user-xmark me-1"></i> Delete
+                      </button>
+                  </td>
+                  <td class="text-dark text-center">
+                      <button class="btn btn-assign-policy" data-bs-toggle="modal" data-bs-target="#assign"
+                          (click)="edit(customer)">Assign Policy</button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+
+      <nav aria-label="Page navigation" class="pagination-container">
+          <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                  <button class="page-link" (click)="prevPage()">Previous</button>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                  <button class="page-link" (click)="nextPage()">Next</button>
+              </li>
+          </ul>
+      </nav>
+  </div>
+
+  <div class="modal fade" id="policy" tabindex="-1" aria-labelledby="policyLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content shadow modal-custom">
+              <div class="modal-header modal-custom-header">
+                  <h5 class="modal-title text-white">Customer Policies</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body modal-scrollable">
+                  <table class="table table-striped table-hover modal-table">
+                      <thead>
+                          <tr>
+                              <th class="text-center">Policy Id</th>
+                              <th class="text-center">Policy Name</th>
+                              <th class="text-center">Create Claim</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @for(policy of policies;track policy.policyId){
+                          <tr>
+                              <td class="text-dark text-center">{{policy.policyId}}</td>
+                              <td class="text-dark text-center">{{policy.policyType}}</td>
+                              <td class="text-center">
+                                  <button class="btn btn-create-claim" data-bs-toggle="modal" data-bs-target="#createClaim"
+                                      (click)="createClaim(policy)">Create Claim</button>
+                              </td>
+                          </tr>
+                          } @empty {
+                          <tr>
+                              <td colspan="3" class="text-center text-muted py-3">No policies assigned to this customer.</td>
+                          </tr>
+                          }
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content shadow modal-custom">
+              <form (ngSubmit)="add(custForm)" #custForm="ngForm">
+                  <div class="modal-header modal-custom-header">
+                      <h5 class="modal-title text-white">Add New Customer</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="mb-3">
+                          <label class="form-label">Customer Name</label>
+                          <input type="text" class="form-control" ngModel name="name" required minlength="3">
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Customer Email:</label>
+                          <input type="email" class="form-control" ngModel name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Customer Phone</label>
+                          <input type="text" class="form-control" ngModel name="customerPhone" required pattern="[0-9]{10}">
+                          <small class="form-text text-muted">e.g., 9876543210</small>
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Customer Address</label>
+                          <input type="text" class="form-control" ngModel name="customerAddress" required>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-submit-form" data-bs-dismiss="modal">
+                          Add Customer
+                      </button>
+                      <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <div *ngIf="selectedCustomer" class="modal fade" id="update" tabindex="-1" aria-labelledby="updateLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content shadow modal-custom">
+              <form (ngSubmit)="update(custForm.value)" #custForm="ngForm">
+                  <div class="modal-header modal-custom-header">
+                      <h5 class="modal-title text-white">Update Customer Info</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="mb-3">
+                          <label class="form-label">Customer Name</label>
+                          <input type="text" class="form-control" [(ngModel)]="selectedCustomer.name" name="name" required
+                              minlength="3">
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Customer Email:</label>
+                          <input type="email" class="form-control" [(ngModel)]="selectedCustomer.email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Customer Phone</label>
+                          <input type="text" class="form-control" [(ngModel)]="selectedCustomer.customerPhone" name="customerPhone"
+                              required pattern="[0-9]{10}">
+                              <small class="form-text text-muted">e.g., 9876543210</small>
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Customer Address</label>
+                          <input type="text" class="form-control" [(ngModel)]="selectedCustomer.customerAddress"
+                              name="customerAddress" required>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-submit-form" data-bs-dismiss="modal">
+                          Update Customer
+                      </button>
+                      <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <div *ngIf="selectedCustomer" class="modal fade" id="assign" tabindex="-1" aria-labelledby="assignLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content shadow modal-custom">
+              <div class="modal-header modal-custom-header">
+                  <h5 class="modal-title text-white">Assign Policy to Customer</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body modal-scrollable">
+                  <table class="table table-striped table-hover modal-table">
+                      <thead>
+                          <tr>
+                              <th class="text-center">Policy Id</th>
+                              <th class="text-center">Policy Name</th>
+                              <th class="text-center">Assign</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @for(policy of policies1;track policy.policyId){
+                          <tr>
+                              <td class="text-dark text-center">{{policy.policyId}}</td>
+                              <td class="text-dark text-center">{{policy.policyName}}</td>
+                              <td class="text-center">
+                                  <button class="btn btn-assign-policy-modal" (click)="editPol(policy)" data-bs-dismiss="modal">Assign</button>
+                              </td>
+                          </tr>
+                          } @empty {
+                          <tr>
+                              <td colspan="3" class="text-center text-muted py-3">No unassigned policies available.</td>
+                          </tr>
+                          }
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div *ngIf="selectedCustomer" class="modal fade" id="createClaim" tabindex="-1" aria-labelledby="createClaimLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content shadow modal-custom">
+              <form (ngSubmit)="create(claimForm.value)" #claimForm="ngForm">
+                  <div class="modal-header modal-custom-header">
+                      <h5 class="modal-title text-white">Create New Claim</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="mb-3">
+                          <label class="form-label">Customer Id</label>
+                          <input type="number" class="form-control" [(ngModel)]="selectedCustomer.customerId" name="customerId" readonly>
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Customer Email</label>
+                          <input type="email" class="form-control" [(ngModel)]="selectedCustomer.email" name="customerMail" readonly>
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Policy Id</label>
+                          <input type="text" class="form-control" [(ngModel)]="selectedPol.policyId" name="policyId" readonly>
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Agent Id</label>
+                          <input type="number" class="form-control" [(ngModel)]="agent.agentId" name="agentId" required>
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Claim Amount</label>
+                          <input type="number" class="form-control" ngModel name="claimAmount" required min="0">
+                      </div>
+                      <div class="mb-3">
+                          <label class="form-label">Status</label>
+                          <input type="text" class="form-control" [(ngModel)]="claimStatus" name="claimStatus" readonly>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-submit-form" data-bs-dismiss="modal">
+                          Create Claim
+                      </button>
+                      <button type="button" class="btn btn-secondary-outline" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f2f5; /* Light grey background */
+      color: #333;
+  }
+
+  .background {
+      padding: 20px;
+      background-color: #f0f2f5;
+  }
+
+  .customer-heading {
+      color: #2c3e50; /* Darker blue-gray for heading */
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-out;
+  }
+
+  .search-add-container {
+      max-width: 1000px; /* Align with table width */
+      margin-bottom: 30px;
+      padding: 0 15px;
+  }
+
+  .search-bar {
+      position: relative;
+      flex-grow: 1;
+      max-width: 400px;
+  }
+
+  .search-input {
+      background-color: #ffffff !important;
+      color: #333 !important;
+      /* Updated border and box-shadow for a more professional look */
+      border: none; /* Removed solid border */
+      border-radius: 25px;
+      padding-left: 40px; /* Space for icon */
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+      transition: all 0.3s ease;
+  }
+
+  .search-input:focus {
+      border-color: #6a0572; /* Primary purple */
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 0 0.25rem rgba(106, 5, 114, 0.25); /* Added subtle outer ring */
+  }
+
+  .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      font-size: 1.1em;
+      /* Ensure icon is perfectly centered vertically */
+      line-height: 1; /* Helps with vertical alignment */
+  }
+
+  .btn-add-customer {
+      background-color: #6a0572; /* Primary purple */
+      color: #ffffff;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 25px;
+      font-weight: 500;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+  }
+
+  .btn-add-customer:hover {
+      background-color: #4a0352; /* Darker purple on hover */
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .customer-table-container {
+      padding: 0 15px;
+  }
+
+  .customer-table {
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden; /* Ensures rounded corners apply to content */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 100%; /* Make table responsive within its container */
+      max-width: 1000px;
+      margin-bottom: 20px;
+      border-collapse: separate; /* For rounded corners to work */
+      border-spacing: 0; /* For rounded corners to work */
+  }
+
+  .customer-table th {
+      background-color: #2c3e50; /* Darker blue-gray for header */
+      color: #ffffff;
+      font-weight: 600;
+      padding: 15px;
+      text-align: left;
+      border-bottom: none; /* Remove default table borders */
+  }
+
+  .customer-table td {
+      padding: 12px 15px;
+      vertical-align: middle;
+      border-top: 1px solid #eceff1; /* Lighter border between rows */
+      color: #333;
+  }
+
+  .customer-table tbody tr:hover {
+      background-color: #e0f2f7; /* Light blue on hover */
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease-in-out;
+  }
+
+  .table-row-animate {
+      animation: fadeInRow 0.5s ease-out forwards;
+      opacity: 0;
+  }
+
+  @keyframes fadeInRow {
+      from {
+          opacity: 0;
+          transform: translateY(10px);
+      }
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+
+  .btn-view-policy,
+  .btn-assign-policy {
+      background-color: #28a745; /* Success green */
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+  }
+
+  .btn-view-policy:hover,
+  .btn-assign-policy:hover {
+      background-color: #218838; /* Darker green on hover */
+      transform: scale(1.05);
+  }
+
+  .action-buttons button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-edit {
+      background-color: #007bff; /* Primary blue */
+      color: #ffffff;
+      border: none;
+  }
+
+  .btn-edit:hover {
+      background-color: #0056b3; /* Darker blue on hover */
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-delete {
+      background-color: #dc3545; /* Danger red */
+      color: #ffffff;
+      border: none;
+  }
+
+  .btn-delete:hover {
+      background-color: #c82333; /* Darker red on hover */
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Pagination Styles */
+  .pagination-container {
+      margin-top: 20px;
+  }
+
+  .pagination .page-item .page-link {
+      color: #6a0572; /* Primary purple for links */
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+  }
+
+  .pagination .page-item.disabled .page-link {
+      color: #6c757d;
+      background-color: #e9ecef;
+      border-color: #dee2e6;
+      cursor: not-allowed;
+  }
+
+  .pagination .page-item .page-link:hover {
+      background-color: #6a0572;
+      color: #ffffff;
+      border-color: #6a0572;
+  }
+
+  /* Modal Styles */
+  .modal-custom .modal-content {
+      border-radius: 10px;
+      overflow: hidden;
+      animation: modalFadeIn 0.3s ease-out;
+  }
+
+  .modal-custom-header {
+      background-color: #2c3e50; /* Darker blue-gray for modal headers */
+      color: #ffffff;
+      padding: 15px 20px;
+      border-bottom: none;
+  }
+
+  .modal-custom-header .btn-close-white {
+      filter: invert(1); /* Makes the close icon white */
+  }
+
+  .modal-body {
+      padding: 20px;
+  }
+
+  .modal-scrollable {
+      max-height: 400px; /* Limit height for scrollable content */
+      overflow-y: auto;
+  }
+
+  .modal-table {
+      margin-bottom: 0; /* Remove bottom margin from table in modal */
+  }
+
+  .modal-table th {
+      background-color: #f8f9fa; /* Light background for modal table header */
+      color: #333;
+      font-weight: 500;
+      border-bottom: 1px solid #dee2e6;
+      padding: 10px;
+  }
+
+  .modal-table td {
+      padding: 10px;
+      border-top: 1px solid #eceff1;
+  }
+
+  .btn-create-claim {
+      background-color: #17a2b8; /* Info blue */
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 15px;
+      font-size: 0.85em;
+      transition: all 0.3s ease;
+  }
+
+  .btn-create-claim:hover {
+      background-color: #138496;
+      transform: scale(1.05);
+  }
+
+  .btn-assign-policy-modal {
+      background-color: #6a0572; /* Primary purple */
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 15px;
+      font-size: 0.85em;
+      transition: all 0.3s ease;
+  }
+  .btn-assign-policy-modal:hover {
+      background-color: #4a0352;
+      transform: scale(1.05);
+  }
+
+  .btn-submit-form {
+      background-color: #6a0572; /* Primary purple */
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+  }
+
+  .btn-submit-form:hover {
+      background-color: #4a0352;
+      transform: translateY(-1px);
+  }
+
+  .btn-secondary-outline {
+      background-color: transparent;
+      color: #6c757d;
+      border: 1px solid #6c757d;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+  }
+
+  .btn-secondary-outline:hover {
+      background-color: #6c757d;
+      color: #ffffff;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Form control styling */
+  .form-control {
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      padding: 10px 15px;
+      transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+      border-color: #6a0572;
+      box-shadow: 0 0 0 0.25rem rgba(106, 5, 114, 0.25);
+  }
+
+  .form-label {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 5px;
+  }
+</style>

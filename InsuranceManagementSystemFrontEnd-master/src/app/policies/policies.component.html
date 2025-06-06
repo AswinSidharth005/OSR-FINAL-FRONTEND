@@ -1,0 +1,155 @@
+<div class="background">
+  <div class="info">
+    <div class="container flex-column d-flex justify-content-center align-items-center position-relative">
+      <h1 class="pt-5 mt-4 display-6 fw-bold text-center policy-heading-gradient">POLICY INFO</h1>
+
+      @if(role === 'admin') {
+      <button class="btn btn-lg btn-gradient-primary mt-3 rounded-pill shadow-lg animate-hover-lift" data-bs-toggle="modal" data-bs-target="#add">
+        <i class="fas fa-plus-circle me-2"></i> ADD POLICY
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-4 col-lg-3 mb-4" *ngFor="let policy of policies">
+        <div class="card policy-card shadow-lg rounded-4 animate-card-pop" (click)="openDetails(policy)" data-bs-toggle="modal" data-bs-target="#details">
+          <div class="card-body text-center d-flex flex-column align-items-center justify-content-center p-4">
+            <img [src]="policy.policyId + '.png'" alt="Policy Logo"
+                 onerror="this.onerror=null; this.src='insurance.png'"
+                 class="policy-logo mb-3 animate-pulse-grow">
+            <p class="card-text fw-bold text-primary fs-5 mt-2">{{ policy.policyName }}</p>
+            <div class="policy-card-overlay">
+              <span class="view-details-text">View Details</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="details" tabindex="-1" aria-labelledby="detailsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 modal-custom-animation">
+      <i *ngIf="role === 'admin' " class="fas fa-trash-alt text-danger position-absolute top-0 end-0 m-3 fs-4 animate-icon-bounce"
+         (click)="deletePolicy(selectedPolicy.policyId); $event.stopPropagation();"
+         title="Delete Policy"
+         style="cursor: pointer;"></i>
+      <div class="modal-header border-0 bg-primary text-white rounded-top-4 p-4 d-flex justify-content-between align-items-start">
+        <h5 class="modal-title fs-3 fw-bold" id="detailsLabel">{{ selectedPolicy?.policyName }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <p class="lead mb-2"><strong class="text-primary">Premium:</strong> ₹{{ selectedPolicy?.premiumAmount }}</p>
+        <p class="lead mb-2"><strong class="text-primary">Coverage:</strong> {{ selectedPolicy?.coverageDetails }}</p>
+        <p class="lead mb-3"><strong class="text-primary">Valid Till:</strong> {{ selectedPolicy?.validityPeriod | date:'mediumDate' }}</p>
+
+        @if(role !== 'Customer') {
+        <div class="d-grid gap-2">
+          <button class="btn btn-lg btn-gradient-warning rounded-pill shadow-sm animate-hover-lift" data-bs-toggle="modal" data-bs-target="#update">
+            <i class="fas fa-edit me-2"></i> Update Policy
+          </button>
+        </div>
+        } @else {
+        <div class="d-grid gap-2">
+          <button class="btn btn-lg btn-gradient-success rounded-pill shadow-sm animate-hover-lift" (click)="enroll(selectedPolicy.policyId,selectedPolicy.policyName)"
+            data-bs-dismiss="modal">
+            <i class="fas fa-file-signature me-2"></i> Enroll Now
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="selectedPolicy" class="modal fade" id="update" tabindex="-1" aria-labelledby="updateLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 modal-custom-animation">
+      <form (ngSubmit)="update(policyForm.value)" #policyForm="ngForm">
+        <div class="modal-header bg-warning text-white rounded-top-4 p-4">
+          <h5 class="modal-title fs-3 fw-bold" id="updateLabel">Update Policy Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Policy ID</label>
+            <input type="number" class="form-control rounded-pill" [(ngModel)]="selectedPolicy.policyId" name="policyId" required readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Policy Name</label>
+            <input type="text" class="form-control rounded-pill" [(ngModel)]="selectedPolicy.policyName" name="policyName" required minlength="3">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Premium Amount</label>
+            <input type="number" class="form-control rounded-pill" [(ngModel)]="selectedPolicy.premiumAmount" name="premiumAmount"
+              required min="0">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Coverage Details</label>
+            <textarea class="form-control rounded-3" [(ngModel)]="selectedPolicy.coverageDetails" name="coverageDetails"
+              required rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Validity Period</label>
+            <input type="date" class="form-control rounded-pill" [(ngModel)]="selectedPolicy.validityPeriod" name="validityPeriod">
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center p-3">
+          <button type="submit" class="btn btn-lg btn-gradient-success rounded-pill shadow-sm me-2 animate-hover-lift" data-bs-dismiss="modal">
+            <i class="fas fa-sync-alt me-2"></i> Update
+          </button>
+          <button type="button" class="btn btn-lg btn-gradient-secondary rounded-pill shadow-sm animate-hover-lift" data-bs-dismiss="modal">
+            <i class="fas fa-times-circle me-2"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="add" tabindex="-1" aria-labelledby="addLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 modal-custom-animation">
+      <form (ngSubmit)="add(policyForm.value)" #policyForm="ngForm">
+        <div class="modal-header bg-info text-white rounded-top-4 p-4">
+          <h5 class="modal-title fs-3 fw-bold" id="addLabel">Add New Policy</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Policy ID</label>
+            <input type="number" class="form-control rounded-pill" ngModel name="policyId" required minlength="1">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Policy Name</label>
+            <input type="text" class="form-control rounded-pill" ngModel name="policyName" required minlength="3">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Premium Amount</label>
+            <input type="number" class="form-control rounded-pill" ngModel name="premiumAmount" required min="0">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Coverage Details</label>
+            <textarea class="form-control rounded-3" ngModel name="coverageDetails" required minlength="10" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Validity Period</label>
+            <input type="date" class="form-control rounded-pill" ngModel name="validityPeriod" required>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center p-3">
+          <button type="submit" class="btn btn-lg btn-gradient-success rounded-pill shadow-sm me-2 animate-hover-lift" data-bs-dismiss="modal">
+            <i class="fas fa-plus me-2"></i> Add Policy
+          </button>
+          <button type="button" class="btn btn-lg btn-gradient-secondary rounded-pill shadow-sm animate-hover-lift" data-bs-dismiss="modal">
+            <i class="fas fa-times-circle me-2"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,230 @@
+<nav class="navbar navbar-expand-lg fixed-top custom-navbar-bg">
+    <div class="container">
+        <a class="navbar-brand text-white" href="#">
+            <i class="fas fa-handshake"></i> VSA & CO
+        </a>
+        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            @if(role !== 'Customer' && isLogedIn){
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/agent-home" href="#">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/policy-op" href="#">POLICIES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/cust-op" href="#">CUSTOMER</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/claim" href="#">CLAIM</a>
+                </li>
+            </ul>
+            } @else if(role === 'Customer' && isLogedIn){
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/cust-home" href="#">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/policy-op" href="#">POLICIES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/myclaim" href="#">CLAIM</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/about-us" href="#">ABOUT US</a>
+                </li>
+            </ul>
+            }
+
+            <ul *ngIf="isLogedIn && role === 'customer' " class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/agent-home" href="#">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/agent-home" href="#">POLICIES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" routerLink="/agent-home" href="#">CLAIM</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                @if(!isLogedIn){
+                <li class="nav-item">
+                    <a class="nav-link btn-custom-login" routerLink="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-custom-register" routerLink="/register" href="#">Register</a>
+                </li>
+                } @else{
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="logout()">Logout</a>
+                </li>
+                }
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#"> | </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link social-icon" href=""><i class="fab fa-facebook-f"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link social-icon" href="#"><i class="fab fa-twitter"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link social-icon" href="#"><i class="fab fa-linkedin-in"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link social-icon" href="#"><i class="fab fa-instagram"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<router-outlet />
+
+<style>
+    /* Custom Navbar Background */
+    .custom-navbar-bg {
+        background-color: #000000 !important; /* Black background */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Add a subtle shadow for depth */
+    }
+
+    /* Adjust text color on navbar for contrast against black */
+    .custom-navbar-bg .navbar-brand,
+    .custom-navbar-bg .nav-link,
+    .custom-navbar-bg .navbar-toggler {
+        color: #ffffff !important; /* White text */
+    }
+
+    /* Adjust toggler icon color */
+    .custom-navbar-bg .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+    }
+
+
+    /* Professional Login Button */
+    .btn-custom-login {
+        background-color: #e0f2f7; /* Soft light blue, kept for contrast */
+        color: #000000; /* Changed to black */
+        border: 1px solid #000000; /* Changed to black border */
+        border-radius: 25px; /* More rounded corners */
+        padding: 8px 20px;
+        transition: all 0.3s ease-in-out;
+        font-weight: 500;
+        margin-right: 10px; /* Space between buttons */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    .btn-custom-login:hover {
+        background-color: #000000; /* Solid black on hover */
+        color: #ffffff; /* White text on hover */
+        transform: translateY(-2px); /* Slight lift */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+    }
+
+    /* Professional Register Button */
+    .btn-custom-register {
+        background-color: #e6ffe6; /* Soft light green, kept for contrast */
+        color: #000000; /* Changed to black */
+        border: 1px solid #000000; /* Changed to black border */
+        border-radius: 25px; /* More rounded corners */
+        padding: 8px 20px;
+        transition: all 0.3s ease-in-out;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    .btn-custom-register:hover {
+        background-color: #000000; /* Solid black on hover */
+        color: #ffffff; /* White text on hover */
+        transform: translateY(-2px); /* Slight lift */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+    }
+
+    /* Social Media Icons */
+    .social-icon {
+        font-size: 1.2em;
+        transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        margin: 0 5px; /* Add some spacing between icons */
+        color: #ffffff; /* Changed to white for contrast against black navbar */
+    }
+
+    .social-icon:hover {
+        color: #cccccc; /* Lighter gray on hover for subtle change */
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    /* Keyframes for a subtle pulsating animation (optional) */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* CSS for the background video (kept from previous response) */
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+        background-color: #333;
+    }
+
+    .video-element {
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+    }
+
+    .content-over-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-family: 'Poppins', sans-serif;
+        color: white; /* Kept white for contrast against the video background */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+</style>
