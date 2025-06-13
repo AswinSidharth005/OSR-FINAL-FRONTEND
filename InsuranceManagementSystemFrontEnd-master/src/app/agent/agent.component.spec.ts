@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+//karma test runner
+//jasmine
+//ng test
+//test bed
+//runs in an isolated environment
 import { AgentComponent } from './agent.component';
 
 describe('AgentComponent', () => {

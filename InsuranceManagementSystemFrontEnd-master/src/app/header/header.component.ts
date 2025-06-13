@@ -43,6 +43,7 @@ export class HeaderComponent  {
     alert("logged out successfully")
     this.router.navigate(["/home"])
    }
+   
 
    
   // get isLogedIn(): boolean{
@@ -50,6 +51,7 @@ export class HeaderComponent  {
   // }
   
 }
+//specifies the structure of the JWT payload
 interface JwtPayload {
   roles?: string;
   // Add other fields if needed

@@ -9,7 +9,7 @@ export class PolicyService {
   all="http://localhost:9090/policy/retrieveAll"
   update = "http://localhost:9090/policy/update"
   assignCust="http://localhost:9090/policy/assignPoliciesToCustomer/"
-  // getcustByName="http://localhost:9090/customer/searchByName/";
+  //getcustByName="http://localhost:9090/customer/searchByName/";
   add="http://localhost:9090/policy/save";
   delete="http://localhost:9090/policy/deletePolicy/";
   constructor(private client:HttpClient) { 

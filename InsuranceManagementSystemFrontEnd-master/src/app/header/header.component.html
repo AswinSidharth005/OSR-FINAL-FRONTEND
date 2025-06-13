@@ -57,6 +57,7 @@
                 @if(!isLogedIn){
                 <li class="nav-item">
                     <a class="nav-link btn-custom-login" routerLink="/login">Login</a>
+                    
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn-custom-register" routerLink="/register" href="#">Register</a>
@@ -66,6 +67,8 @@
                     <a class="nav-link text-white" (click)="logout()">Logout</a>
                 </li>
                 }
+                <!-- <button onclick="alert('This is an inbuilt browser alert!')">Show Inbuilt Alert</button> -->
+
 
                 <li class="nav-item">
                     <a class="nav-link text-white" href="#"> | </a>
@@ -86,6 +89,7 @@
         </div>
     </div>
 </nav>
+
 <router-outlet />
 
 <style>
@@ -110,7 +114,7 @@
 
     /* Professional Login Button */
     .btn-custom-login {
-        background-color: #e0f2f7; /* Soft light blue, kept for contrast */
+        background-color: #0bbeef; /* Soft light blue, kept for contrast */
         color: #000000; /* Changed to black */
         border: 1px solid #000000; /* Changed to black border */
         border-radius: 25px; /* More rounded corners */
@@ -130,7 +134,7 @@
 
     /* Professional Register Button */
     .btn-custom-register {
-        background-color: #e6ffe6; /* Soft light green, kept for contrast */
+        background-color: #0def0d; /* Soft light green, kept for contrast */
         color: #000000; /* Changed to black */
         border: 1px solid #000000; /* Changed to black border */
         border-radius: 25px; /* More rounded corners */

@@ -96,8 +96,8 @@ export class LoginComponent {
 
 
 }
-
+//defines the structure of decoded JWT payload
 interface JwtPayload {
   roles?: string;
-  // Add other fields if needed
+  
 }

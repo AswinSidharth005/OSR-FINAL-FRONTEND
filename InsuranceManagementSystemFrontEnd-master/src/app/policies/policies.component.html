@@ -5,6 +5,7 @@
 
       @if(role === 'admin') {
       <button class="btn btn-lg btn-gradient-primary mt-3 rounded-pill shadow-lg animate-hover-lift" data-bs-toggle="modal" data-bs-target="#add">
+        <!-- template reference variable -->
         <i class="fas fa-plus-circle me-2"></i> ADD POLICY
       </button>
       }
@@ -39,7 +40,7 @@
          style="cursor: pointer;"></i>
       <div class="modal-header border-0 bg-primary text-white rounded-top-4 p-4 d-flex justify-content-between align-items-start">
         <h5 class="modal-title fs-3 fw-bold" id="detailsLabel">{{ selectedPolicy?.policyName }}</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>
       <div class="modal-body p-4">
         <p class="lead mb-2"><strong class="text-primary">Premium:</strong> ₹{{ selectedPolicy?.premiumAmount }}</p>

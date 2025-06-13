@@ -42,7 +42,7 @@ export class MyclaimComponent {
         
     }
   }
-
+//makes a java class available to other service in the application
 export class Claim {
   claimId: number;
   customerId: number;

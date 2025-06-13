@@ -15,7 +15,7 @@ export class MypolicyComponent {
   agent: Agent | null = null;
   selectedPol: Policy | null = null;
   customerId: any | null = null;
-  claimStatus = "FILLED";
+  claimStatus = "FILED";
   constructor(private customerService: ListcustomerService, private listCust:ListcustomerService,private claimService:CLaimService) {
     // This service should be injected to fetch customer data
     const custId = sessionStorage.getItem("custId")
@@ -29,7 +29,7 @@ export class MypolicyComponent {
   } 
   create(claim: Claim) {
       console.log(claim);
-      claim.claimStatus="FILLED"
+      claim.claimStatus="FILED"
       this.claimService.createClaim(claim).subscribe({
         next: (response) =>{
           console.log(response)

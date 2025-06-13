@@ -148,7 +148,7 @@ export class CustomerComponent implements OnInit {
       alert("Deleted successfully")
     }
   }
-
+//higher order function to filter customers based on search term
   filterCustomers(): void {
     this.filteredCustomers = this.customers.filter(c =>
       c.name.toLowerCase().includes(this.searchTerm.toLowerCase())

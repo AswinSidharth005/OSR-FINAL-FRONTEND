@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
   passwordMatchValidator(form : FormGroup){
     const password = form.get("password").value;
     const conPassword = form.get("confirmPassword").value;
-    return password === conPassword ? null :{mismatch:true}
+    return password === conPassword ? null :{mismatch:true}//== //===
   }
   onReset() :void{
     this.myForm.reset();

@@ -36,8 +36,8 @@
                 <td>{{claim.customerMail}}</td>
                 <td>{{claim.claimAmount | currency:'USD':'symbol'}}</td>
                 <td>
-                  <span class="badge" [ngClass]="{
-                      'bg-success': claim.claimStatus === 'Approved',
+                  <span class="badge" style="color: black;" [ngClass]="{
+                      'bg-success ': claim.claimStatus === 'Approved',
                       'bg-warning text-dark': claim.claimStatus === 'Pending',
                       'bg-danger': claim.claimStatus === 'Rejected'
                     }">
